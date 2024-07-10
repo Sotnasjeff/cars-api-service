@@ -1,5 +1,6 @@
 package com.example.cars.api.service.controller;
 
+import com.example.cars.api.service.domain.dto.CarDTO;
 import com.example.cars.api.service.domain.entity.Car;
 import com.example.cars.api.service.domain.service.CarService;
 import java.util.Iterator;
@@ -26,20 +27,20 @@ public class CarController {
     public CarService service;
 
     @GetMapping
-    public ResponseEntity<Iterable<Car>> getCars() {
+    public ResponseEntity<List<CarDTO>> getCars() {
         return new ResponseEntity<>(service.getCars(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getCarById(@PathVariable("id")Long id) {
+    public ResponseEntity<CarDTO> getCarById(@PathVariable("id")Long id) {
         return service.getCarById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/type/{type}")
-    public ResponseEntity getCarByType(@PathVariable("type")String type) {
-        List<Car> car = service.getCarByType(type);
+    public ResponseEntity<List<CarDTO>> getCarByType(@PathVariable("type")String type) {
+        List<CarDTO> car = service.getCarByType(type);
 
-        return car.isEmpty()  ? ResponseEntity.noContent().build() : ResponseEntity.ok(car);
+        return car.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(car);
     }
 
     @PostMapping
