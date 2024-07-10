@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: cars
+      MYSQL_DATABASE: car_service
       MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
