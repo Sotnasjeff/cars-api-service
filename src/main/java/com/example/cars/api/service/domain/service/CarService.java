@@ -28,25 +28,27 @@ public class CarService {
         return repository.findByType(type).stream().map(CarDTO::create).collect(Collectors.toList());
     }
 
-    public Car insertCar(Car car) {
-        return repository.save(car);
+    public CarDTO insertCar(Car car) {
+        return CarDTO.create(repository.save(car));
     }
 
-    public Car updateCar(Long id, Car car) {
+    public CarDTO updateCar(Long id, Car car) {
         Assert.notNull(id, "Id can not be null");
-        return repository.findById(id).map(db -> {
-           db.setName(car.getName());
-           db.setType(car.getType());
+        return CarDTO.create(repository.findById(id).map(db -> {
+            db.setName(car.getName());
+            db.setType(car.getType());
 
-           repository.save(db);
+            repository.save(db);
 
-           return db;
-        }).orElseThrow(() -> new RuntimeException("It was not possible to update due to an error"));
+            return db;
+        }).orElseThrow(() -> new RuntimeException("It was not possible to update due to an error")));
     }
 
-    public String deleteCar(Long id) {
-        repository.deleteById(id);
-
-        return "Car has been deleted successfully";
+    public Boolean deleteCar(Long id) {
+        if (getCarById(id).isPresent()){
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
