@@ -1,6 +1,6 @@
 package com.example.cars.api.service;
 
-import com.example.cars.api.service.controller.CarController;
+import com.example.cars.api.service.domain.controller.CarController;
 import com.example.cars.api.service.domain.dto.CarDTO;
 import com.example.cars.api.service.domain.entity.Car;
 import com.example.cars.api.service.domain.service.CarService;

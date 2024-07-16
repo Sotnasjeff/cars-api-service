@@ -2,6 +2,7 @@ package com.example.cars.api.service.domain.service;
 
 import com.example.cars.api.service.domain.dto.CarDTO;
 import com.example.cars.api.service.domain.entity.Car;
+import com.example.cars.api.service.domain.exception.CarNotFoundException;
 import com.example.cars.api.service.domain.repository.CarRepository;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +21,8 @@ public class CarService {
         return repository.findAll().stream().map(CarDTO::create).collect(Collectors.toList());
     }
 
-    public Optional<CarDTO> getCarById(Long id) {
-        return repository.findById(id).map(CarDTO::create);
+    public CarDTO getCarById(Long id) {
+        return repository.findById(id).map(CarDTO::create).orElseThrow(() -> new CarNotFoundException("Car has not been found id:" + id));
     }
 
     public List<CarDTO> getCarByType(String type) {
@@ -29,6 +30,7 @@ public class CarService {
     }
 
     public CarDTO insertCar(Car car) {
+        Assert.isNull(car.getId(), "Id should not be sent to insert");
         return CarDTO.create(repository.save(car));
     }
 
@@ -44,11 +46,10 @@ public class CarService {
         }).orElseThrow(() -> new RuntimeException("It was not possible to update due to an error")));
     }
 
-    public Boolean deleteCar(Long id) {
-        if (getCarById(id).isPresent()){
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteCar(Long id) {
+        CarDTO carFound = getCarById(id);
+
+        repository.deleteById(carFound.getId());
+
     }
 }

@@ -1,4 +1,4 @@
-package com.example.cars.api.service.controller;
+package com.example.cars.api.service.domain.controller;
 
 import com.example.cars.api.service.domain.dto.CarDTO;
 import com.example.cars.api.service.domain.entity.Car;
@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +33,7 @@ public class CarController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CarDTO> getCarById(@PathVariable("id") Long id) {
-        return service.getCarById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(service.getCarById(id));
     }
 
     @GetMapping("/type/{type}")
@@ -44,14 +45,12 @@ public class CarController {
 
     @PostMapping
     public ResponseEntity<CarDTO> insertCar(@RequestBody Car car) {
-        try {
-            CarDTO newCar = service.insertCar(car);
 
-            URI location = getUri(newCar.getId());
-            return ResponseEntity.created(location).build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        CarDTO newCar = service.insertCar(car);
+
+        URI location = getUri(newCar.getId());
+        return ResponseEntity.created(location).build();
+
     }
 
     private URI getUri(Long id) {
@@ -60,12 +59,13 @@ public class CarController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CarDTO> updateCar(@PathVariable("id") Long id, @RequestBody Car car) {
-        CarDTO updatedCar =service.updateCar(id, car);
+        CarDTO updatedCar = service.updateCar(id, car);
         return updatedCar != null ? ResponseEntity.ok(updatedCar) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteCar(@PathVariable("id") Long id) {
-        return service.deleteCar(id) ? ResponseEntity.ok(true) : ResponseEntity.notFound().build();
+    public ResponseEntity deleteCar(@PathVariable("id") Long id) {
+        service.deleteCar(id);
+        return ResponseEntity.ok().build();
     }
 }
