@@ -46,8 +46,8 @@ public class SecurityConfig {
 
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST).hasRole("ADMIN")
+                        auth.requestMatchers(HttpMethod.DELETE, "/api/v1/car/{id}").hasAnyAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/v1/car").hasAnyAuthority("ADMIN")
                                 .anyRequest().authenticated())
                 .authenticationManager(authenticationManager).httpBasic(Customizer.withDefaults()).build();
     }

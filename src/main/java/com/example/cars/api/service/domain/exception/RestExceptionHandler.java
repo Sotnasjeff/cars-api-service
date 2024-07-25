@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 
-    @ExceptionHandler({CarNotFoundException.class, UsernameNotFoundException.class})
+    @ExceptionHandler({CarNotFoundException.class, UsernameNotFoundException.class, UserNotFoundException.class})
     public ResponseEntity<CustomExceptionResponse> errorNotFound(CarNotFoundException ex) {
         CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(ex.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);

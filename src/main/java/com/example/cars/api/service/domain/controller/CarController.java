@@ -3,12 +3,13 @@ package com.example.cars.api.service.domain.controller;
 import com.example.cars.api.service.domain.dto.CarDTO;
 import com.example.cars.api.service.domain.entity.Car;
 import com.example.cars.api.service.domain.service.CarService;
+import com.example.cars.api.service.domain.utils.UriCatcher;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/v1/car")
@@ -25,6 +25,9 @@ public class CarController {
 
     @Autowired
     public CarService service;
+
+    @Autowired
+    UriCatcher uriCatcher;
 
     @GetMapping
     public ResponseEntity<List<CarDTO>> getCars() {
@@ -44,18 +47,16 @@ public class CarController {
     }
 
     @PostMapping
+    //@PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<CarDTO> insertCar(@RequestBody Car car) {
 
         CarDTO newCar = service.insertCar(car);
 
-        URI location = getUri(newCar.getId());
+        URI location = uriCatcher.getUri(newCar.getId());
         return ResponseEntity.created(location).build();
 
     }
 
-    private URI getUri(Long id) {
-        return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<CarDTO> updateCar(@PathVariable("id") Long id, @RequestBody Car car) {
