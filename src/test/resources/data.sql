@@ -1,4 +1,13 @@
 create table if not exists car(id bigint not null auto_increment,name varchar(255),description varchar(255),url_photo varchar(255),url_video varchar(255),latitude varchar(255),longitude varchar(255),type varchar(255), primary key (id));
+create table if not exists user(id bigint not null auto_increment, name varchar(255), email varchar(255), login varchar(255), password varchar(255), primary key (id));
+create table if not exists role(id bigint not null auto_increment, name varchar(255), primary key (id));
+create table if not exists user_roles(user_id bigint not null, role_id bigint not null);
+
+insert into user(id, name, email, login, password) values (1, 'admin', 'admin@admin', 'admin', '$2a$10$HKveMsPlst41Ie2LQgpijO691lUtZ8cLfcliAO1DD9TtZxEpaEoJe');
+insert into role(id, name) values(1, 'ADMIN');
+insert into role(id, name) values(2, 'USER');
+insert into user_roles(user_id,role_id) values(1,1);
+insert into user_roles(user_id,role_id) values(1,2);
 
 insert into car (name,description,url_photo,url_video,latitude,longitude,type) VALUES('Tucker 1948','Descrição Tucker 1948','http://www.livroandroid.com.br/livro/carros/classicos/Tucker.png','http://www.livroandroid.com.br/livro/carros/classicos/tucker.mp4','-23.564224','-46.653156','classicos');
 insert into car (name,description,url_photo,url_video,latitude,longitude,type) VALUES('Chevrolet Corvette','Descrição Chevrolet Corvette','http://www.livroandroid.com.br/livro/carros/classicos/Chevrolet_Corvette.png','http://www.livroandroid.com.br/livro/carros/classicos/corvette.mp4','-23.564224','-46.653156','classicos');
